@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#071754" />
+  <title>KDC Space Leaderboard</title>
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body>
+  <main id="app" class="app-shell">
+    <div id="setupNotice" class="setup-notice hidden" role="alert">
+      <strong>Setup needed:</strong> add your Supabase Project URL and publishable key to <code>js/config.js</code>.
+    </div>
+
+    <header class="topbar management-control">
+      <div class="brand-chip">KDC LIVE</div>
+      <nav class="nav-actions" aria-label="Management controls">
+        <button id="adminButton" class="glass-button">Admin Panel</button>
+        <button id="pointsButton" class="glass-button">Points Master</button>
+        <button id="fullscreenButton" class="glass-button">Full Screen</button>
+      </nav>
+    </header>
+
+    <section class="leaderboard-stage" aria-label="Live leaderboard">
+      <div class="half-wrap">
+        <div id="connectionBadge" class="connection-badge">Connecting…</div>
+        <h1 id="halfTitle">HALF 1</h1>
+      </div>
+
+      <div id="surgeAnnouncement" class="surge-announcement hidden" aria-live="polite">
+        <div class="surge-kicker">⚡ POINT SURGE! ⚡</div>
+        <div id="surgeRoomLabel" class="surge-room">ROOM 1</div>
+      </div>
+
+      <div id="rocketField" class="rocket-field"></div>
+
+      <div id="timer" class="timer hidden" aria-live="polite">00:00</div>
+    </section>
+  </main>
+
+  <div id="modalBackdrop" class="modal-backdrop hidden"></div>
+
+  <section id="loginModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <button class="modal-close" data-close-modal aria-label="Close">×</button>
+    <h2 id="loginTitle">Sign in</h2>
+    <p id="loginSubtitle" class="muted">Use your leaderboard account.</p>
+    <form id="loginForm" class="stack-form">
+      <label>Email<input id="loginEmail" type="email" autocomplete="username" required /></label>
+      <label>Password<input id="loginPassword" type="password" autocomplete="current-password" required /></label>
+      <button class="primary-button" type="submit">Sign In</button>
+    </form>
+    <p id="loginError" class="form-error hidden"></p>
+  </section>
+
+  <section id="adminModal" class="modal panel-modal hidden" role="dialog" aria-modal="true" aria-labelledby="adminTitle">
+    <button class="modal-close" data-close-modal aria-label="Close">×</button>
+    <div class="panel-header">
+      <div><h2 id="adminTitle">Admin Panel</h2><p id="adminIdentity" class="muted"></p></div>
+      <button id="adminLogout" class="secondary-button">Sign Out</button>
+    </div>
+
+    <div class="control-grid">
+      <article class="control-card">
+        <h3>Current Half</h3>
+        <div class="button-row">
+          <button class="half-button primary-button" data-half="1">Half 1</button>
+          <button class="half-button secondary-button" data-half="2">Half 2</button>
+        </div>
+      </article>
+
+      <article class="control-card">
+        <h3>Timer</h3>
+        <label>Minutes<input id="timerMinutes" type="number" min="0" max="999" value="5" /></label>
+        <label>Seconds<input id="timerSeconds" type="number" min="0" max="59" value="0" /></label>
+        <div class="button-row">
+          <button id="startTimer" class="primary-button">Start</button>
+          <button id="clearTimer" class="secondary-button">Clear</button>
+        </div>
+      </article>
+
+      <article class="control-card wide-card">
+        <h3>Score Reveal</h3>
+        <p class="muted">Hide everything first, then reveal teams one at a time or all at once.</p>
+        <div class="button-row">
+          <button id="hideScores" class="secondary-button">Hide All Scores</button>
+          <button id="revealAll" class="primary-button">Reveal All</button>
+        </div>
+        <div id="revealTeamButtons" class="team-control-grid"></div>
+      </article>
+
+      <article class="control-card wide-card surge-card">
+        <h3>Point Surge</h3>
+        <label>Active room<select id="surgeRoomSelect"></select></label>
+        <div class="button-row">
+          <button id="startSurge" class="surge-button">Start Point Surge</button>
+          <button id="clearSurge" class="secondary-button">Clear Point Surge</button>
+        </div>
+        <details>
+          <summary>Edit room names</summary>
+          <div id="roomNameEditor" class="name-editor"></div>
+          <button id="saveRoomNames" class="secondary-button">Save Room Names</button>
+        </details>
+      </article>
+
+      <article class="control-card wide-card">
+        <h3>Team Names</h3>
+        <p class="muted">Change these whenever your final team names are ready.</p>
+        <div id="teamNameEditor" class="name-editor"></div>
+        <button id="saveTeamNames" class="secondary-button">Save Team Names</button>
+      </article>
+
+      <article class="control-card danger-card wide-card">
+        <h3>Danger Zone</h3>
+        <p>Reset scores to 0, return to Half 1, show scores, clear timer/reveals, and clear Point Surge. Team and room names are kept.</p>
+        <button id="resetLeaderboard" class="danger-button">Reset Leaderboard</button>
+      </article>
+    </div>
+    <p id="adminStatus" class="panel-status"></p>
+  </section>
+
+  <section id="pointsModal" class="modal panel-modal hidden" role="dialog" aria-modal="true" aria-labelledby="pointsTitle">
+    <button class="modal-close" data-close-modal aria-label="Close">×</button>
+    <div class="panel-header">
+      <div><h2 id="pointsTitle">Points Master Panel</h2><p id="pointsIdentity" class="muted"></p></div>
+      <button id="pointsLogout" class="secondary-button">Sign Out</button>
+    </div>
+    <p class="muted">Score controls only. Every change is written to Supabase and synchronized live.</p>
+    <div id="scoreControls" class="score-control-list"></div>
+    <p id="pointsStatus" class="panel-status"></p>
+  </section>
+
+  <section id="resetModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="resetTitle">
+    <button class="modal-close" data-close-modal aria-label="Close">×</button>
+    <h2 id="resetTitle">Reset the leaderboard?</h2>
+    <p>This sets every score to 0 and clears the current game state. Team names and room names stay unchanged.</p>
+    <label>Type <strong>RESET</strong> to continue<input id="resetConfirmText" type="text" autocomplete="off" /></label>
+    <div class="button-row">
+      <button data-close-modal class="secondary-button">Cancel</button>
+      <button id="confirmReset" class="danger-button" disabled>Reset Everything</button>
+    </div>
+  </section>
+
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
