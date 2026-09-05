@@ -43,7 +43,6 @@ let initialLoadDone = false;
 let toastTimer = null;
 
 const lanePositions = [7.5, 24.5, 41.5, 58.5, 75.5, 92.5];
-const hueRotations = [0, 48, 105, 165, 225, 285];
 
 function toast(message) {
   els.toast.textContent = message;
@@ -86,7 +85,7 @@ function teamVisible(team) {
 function rocketMarkup(team, i) {
   const visible = teamVisible(team);
   const height = rankHeight(team, state.teams, state.settings?.scores_hidden);
-  return `<div class="rocket-position" id="rocket-${team.id}" style="left:${lanePositions[i] ?? 50}%;--rest:${height}%;--hue:${hueRotations[i] ?? 0}deg;--bob-delay:${(-i*.31).toFixed(2)}s">
+  return `<div class="rocket-position" id="rocket-${team.id}" style="left:${lanePositions[i] ?? 50}%;--rest:${height}%;--bob-delay:${(-i*.31).toFixed(2)}s">
     <div class="rocket-bob"><div class="rocket-boost" id="boost-${team.id}">
       <img class="flame-image" src="./assets/flame.png" alt="" />
       <img class="rocket-image" src="./assets/rocket.png" alt="${escapeHtml(team.name)} rocket" />
@@ -114,7 +113,6 @@ function renderRockets({ previousScores = new Map(), animateTeamId = null, delta
     }
     const visible = teamVisible(team);
     pos.style.left = `${lanePositions[i] ?? 50}%`;
-    pos.style.setProperty('--hue', `${hueRotations[i] ?? 0}deg`);
     pos.querySelector('.team-name').textContent = team.name;
     const scoreEl = pos.querySelector('.team-score');
     scoreEl.textContent = visible ? team.score : '???';
