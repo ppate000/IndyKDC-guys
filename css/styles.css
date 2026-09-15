@@ -29,6 +29,8 @@ button { cursor: pointer; }
 .connection-badge.offline { background: rgba(150,40,50,.82); }
 .rocket-field { position: absolute; left: 18%; right: 18%; top: 13%; bottom: 7%; }
 .rocket-position { --rest: 7%; position: absolute; width: 15%; min-width: 96px; max-width: 190px; bottom: var(--rest); transform: translateX(-50%); transition: bottom 1.15s cubic-bezier(.2,.75,.2,1); z-index: 10; }
+.rocket-position.hidden-cruise { animation: hiddenCruise 4.8s ease-in-out infinite alternate; animation-delay: var(--cruise-delay, 0s); }
+.rocket-position.hidden-cruise .rocket-bob { animation-duration: 1.8s; }
 .rocket-bob { animation: bob 2.8s ease-in-out infinite; animation-delay: var(--bob-delay, 0s); }
 .rocket-boost { position: relative; transition: transform .2s ease; }
 .rocket-boost.boost-small { animation: boostSmall .7s ease-out; }
@@ -47,6 +49,11 @@ button { cursor: pointer; }
 .surge-announcement { position: fixed; z-index: 70; inset: -14px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px; border: 10px solid #fff5a5; background: radial-gradient(circle at center,rgba(255,246,82,.98) 0%,rgba(255,163,0,.98) 40%,rgba(232,54,0,.99) 100%); color: #351300; box-shadow: inset 0 0 100px rgba(255,255,255,.4), 0 0 80px #ffb000; pointer-events: none; animation: surgeScreenShake .12s linear infinite; transform-origin: center; }
 .surge-kicker { font-size: clamp(64px,10vw,170px); line-height: .9; font-weight: 1000; text-shadow: 0 5px 0 rgba(255,255,255,.45), 0 10px 20px rgba(80,20,0,.28); }
 .surge-room { margin-top: 28px; font-size: clamp(46px,7vw,120px); line-height: 1; font-weight: 1000; letter-spacing: .1em; text-shadow: 0 4px 0 rgba(255,255,255,.35); }
+.surge-corner { position: fixed; z-index: 69; bottom: 18px; width: min(260px, 28vw); padding: 14px 18px; border: 3px solid #fff5a5; border-radius: 18px; text-align: center; background: linear-gradient(135deg,rgba(232,54,0,.95),rgba(255,174,0,.96)); color: #351300; box-shadow: 0 0 28px rgba(255,176,0,.8), 0 10px 28px rgba(0,0,0,.35); pointer-events: none; animation: cornerSurgePulse .75s ease-in-out infinite alternate; }
+.surge-corner-left { left: 18px; }
+.surge-corner-right { right: 18px; }
+.surge-corner-title { font-size: clamp(16px,1.7vw,25px); font-weight: 1000; }
+.surge-corner-room { margin-top: 3px; font-size: clamp(18px,2vw,30px); font-weight: 1000; letter-spacing: .08em; }
 .setup-notice { position: fixed; z-index: 100; left: 50%; top: 50%; transform: translate(-50%,-50%); max-width: 620px; padding: 22px; border-radius: 18px; background: #fff; color: #171717; box-shadow: 0 20px 80px rgba(0,0,0,.55); }
 .modal-backdrop { position: fixed; z-index: 80; inset: 0; background: rgba(0,0,25,.7); backdrop-filter: blur(5px); }
 .modal { position: fixed; z-index: 90; left: 50%; top: 50%; transform: translate(-50%,-50%); width: min(92vw,520px); max-height: 88vh; overflow: auto; padding: 26px; border-radius: 22px; background: #0d1950; border: 1px solid rgba(255,255,255,.22); box-shadow: 0 30px 100px rgba(0,0,0,.55); }
@@ -89,9 +96,9 @@ body.fullscreen-active .management-control { display: none !important; }
 @keyframes boostSmall { 0%{transform:translateY(0)} 36%{transform:translateY(-16px)} 100%{transform:translateY(0)} }
 @keyframes boostMedium { 0%{transform:translateY(0)} 36%{transform:translateY(-31px)} 100%{transform:translateY(0)} }
 @keyframes boostLarge { 0%{transform:translateY(0)} 36%{transform:translateY(-52px)} 100%{transform:translateY(0)} }
-@keyframes flameBoostSmall { 35%{transform:translateX(-50%) scaleY(1.35) scaleX(1.08)} }
-@keyframes flameBoostMedium { 35%{transform:translateX(-50%) scaleY(1.65) scaleX(1.12)} }
-@keyframes flameBoostLarge { 35%{transform:translateX(-50%) scaleY(2.05) scaleX(1.18)} }
+@keyframes flameBoostSmall { 0%,100%{transform:translateX(-50%) scale(1)} 35%{transform:translateX(-50%) scaleY(1.65) scaleX(1.35)} }
+@keyframes flameBoostMedium { 0%,100%{transform:translateX(-50%) scale(1)} 35%{transform:translateX(-50%) scaleY(2.15) scaleX(1.55)} }
+@keyframes flameBoostLarge { 0%,100%{transform:translateX(-50%) scale(1)} 35%{transform:translateX(-50%) scaleY(2.75) scaleX(1.8)} }
 @keyframes surgeScreenShake {
   0%   { transform: translate(0,0) rotate(0deg) scale(1.01); }
   20%  { transform: translate(-5px,3px) rotate(-.18deg) scale(1.01); }
@@ -99,6 +106,15 @@ body.fullscreen-active .management-control { display: none !important; }
   60%  { transform: translate(-3px,-2px) rotate(-.12deg) scale(1.01); }
   80%  { transform: translate(5px,4px) rotate(.12deg) scale(1.01); }
   100% { transform: translate(0,0) rotate(0deg) scale(1.01); }
+}
+
+@keyframes hiddenCruise {
+  0% { bottom: 8%; }
+  100% { bottom: 62%; }
+}
+@keyframes cornerSurgePulse {
+  from { transform: scale(.98); filter: brightness(.95); }
+  to { transform: scale(1.03); filter: brightness(1.12); }
 }
 @media (max-width: 800px) {
   .rocket-field { left: 8%; right: 8%; }

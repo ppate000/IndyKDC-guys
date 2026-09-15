@@ -8,6 +8,10 @@ const els = {
   timer: document.querySelector('#timer'),
   surgeAnnouncement: document.querySelector('#surgeAnnouncement'),
   surgeRoomLabel: document.querySelector('#surgeRoomLabel'),
+  surgeCornerLeft: document.querySelector('#surgeCornerLeft'),
+  surgeCornerRight: document.querySelector('#surgeCornerRight'),
+  surgeCornerLeftRoom: document.querySelector('#surgeCornerLeftRoom'),
+  surgeCornerRightRoom: document.querySelector('#surgeCornerRightRoom'),
   modalBackdrop: document.querySelector('#modalBackdrop'),
   loginModal: document.querySelector('#loginModal'),
   loginTitle: document.querySelector('#loginTitle'),
@@ -85,7 +89,7 @@ function teamVisible(team) {
 function rocketMarkup(team, i) {
   const visible = teamVisible(team);
   const height = rankHeight(team, state.teams, state.settings?.scores_hidden);
-  return `<div class="rocket-position" id="rocket-${team.id}" style="left:${lanePositions[i] ?? 50}%;--rest:${height}%;--bob-delay:${(-i*.31).toFixed(2)}s">
+  return `<div class="rocket-position ${state.settings?.scores_hidden && !team.revealed ? 'hidden-cruise' : ''}" id="rocket-${team.id}" style="left:${lanePositions[i] ?? 50}%;--rest:${height}%;--bob-delay:${(-i*.31).toFixed(2)}s;--cruise-delay:${(-i*.67).toFixed(2)}s">
     <div class="rocket-bob"><div class="rocket-boost" id="boost-${team.id}">
       <img class="flame-image" src="./assets/flame.png" alt="" />
       <img class="rocket-image" src="./assets/rocket.png" alt="${escapeHtml(team.name)} rocket" />
@@ -113,6 +117,7 @@ function renderRockets({ previousScores = new Map(), animateTeamId = null, delta
     }
     const visible = teamVisible(team);
     pos.style.left = `${lanePositions[i] ?? 50}%`;
+    pos.classList.toggle('hidden-cruise', Boolean(state.settings?.scores_hidden && !team.revealed));
     pos.querySelector('.team-name').textContent = team.name;
     const scoreEl = pos.querySelector('.team-score');
     scoreEl.textContent = visible ? team.score : '???';
@@ -139,10 +144,34 @@ function renderSettings() {
   els.halfTitle.textContent = `HALF ${state.settings.current_half}`;
   if (state.settings.point_surge_active && state.settings.active_surge_room_id) {
     const room = state.rooms.find(r => r.id === state.settings.active_surge_room_id);
-    els.surgeRoomLabel.textContent = (room?.name || `Room ${state.settings.active_surge_room_id}`).toUpperCase();
-    els.surgeAnnouncement.classList.remove('hidden');
+    const label = (room?.name || `Room ${state.settings.active_surge_room_id}`).toUpperCase();
+    const surgeKey = `${state.settings.active_surge_room_id}-${state.settings.updated_at || ''}`;
+    els.surgeRoomLabel.textContent = label;
+    els.surgeCornerLeftRoom.textContent = label;
+    els.surgeCornerRightRoom.textContent = label;
+
+    // A new Point Surge starts full-screen. After 5 seconds it becomes
+    // two compact persistent badges in the bottom corners.
+    if (displayedSurgeKey !== surgeKey) {
+      displayedSurgeKey = surgeKey;
+      clearTimeout(surgeShrinkTimer);
+      els.surgeAnnouncement.classList.remove('hidden');
+      els.surgeCornerLeft.classList.add('hidden');
+      els.surgeCornerRight.classList.add('hidden');
+      surgeShrinkTimer = setTimeout(() => {
+        els.surgeAnnouncement.classList.add('hidden');
+        if (state.settings?.point_surge_active) {
+          els.surgeCornerLeft.classList.remove('hidden');
+          els.surgeCornerRight.classList.remove('hidden');
+        }
+      }, 5000);
+    }
   } else {
+    clearTimeout(surgeShrinkTimer);
+    displayedSurgeKey = null;
     els.surgeAnnouncement.classList.add('hidden');
+    els.surgeCornerLeft.classList.add('hidden');
+    els.surgeCornerRight.classList.add('hidden');
   }
   restartTimerTick();
 }
