@@ -22,7 +22,7 @@ button { cursor: pointer; }
 .nav-actions { display: flex; gap: 8px; }
 .glass-button { color: #fff; border-radius: 12px; padding: 10px 14px; font-weight: 800; }
 .glass-button:hover { transform: translateY(-1px); background: rgba(26,52,130,.85); }
-.half-wrap { position: absolute; top: 2px; left: 50%; transform: translateX(-50%); z-index: 20; text-align: center; }
+.half-wrap { position: absolute; top: 54px; left: 50%; transform: translateX(-50%); z-index: 20; text-align: center; }
 .half-wrap h1 { margin: 6px 0 0; font-size: clamp(30px,4vw,58px); letter-spacing: .07em; text-shadow: 0 4px 0 rgba(0,0,0,.2), 0 0 20px rgba(70,190,255,.75); }
 .connection-badge { display: inline-block; padding: 5px 10px; border-radius: 999px; font-size: 12px; font-weight: 800; }
 .connection-badge.live { background: rgba(0,120,76,.72); }
@@ -106,7 +106,7 @@ body.fullscreen-active .management-control { display: none !important; }
   .brand-chip { display:none; }
   .nav-actions { margin-left:auto; gap:5px; }
   .glass-button { padding:8px; font-size:12px; }
-  .half-wrap { top: 2px; }
+  .half-wrap { top: 54px; }
   .control-grid { grid-template-columns: 1fr; }
   .wide-card { grid-column:auto; }
   .team-control-grid { grid-template-columns: repeat(2,1fr); }
