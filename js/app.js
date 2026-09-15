@@ -45,6 +45,8 @@ let timerInterval = null;
 let realtimeChannel = null;
 let initialLoadDone = false;
 let toastTimer = null;
+let surgeShrinkTimer = null;
+let displayedSurgeKey = null;
 
 const lanePositions = [7.5, 24.5, 41.5, 58.5, 75.5, 92.5];
 
