@@ -27,7 +27,7 @@ button { cursor: pointer; }
 .connection-badge { display: inline-block; padding: 5px 10px; border-radius: 999px; font-size: 12px; font-weight: 800; }
 .connection-badge.live { background: rgba(0,120,76,.72); }
 .connection-badge.offline { background: rgba(150,40,50,.82); }
-.rocket-field { position: absolute; left: 18%; right: 18%; top: 17%; bottom: 7%; }
+.rocket-field { position: absolute; left: 18%; right: 18%; top: 25%; bottom: 7%; }
 .rocket-position { --rest: 7%; position: absolute; width: 15%; min-width: 96px; max-width: 190px; bottom: var(--rest); transform: translateX(-50%); transition: bottom 1.15s cubic-bezier(.2,.75,.2,1); z-index: 10; }
 .rocket-bob { animation: bob 2.8s ease-in-out infinite; animation-delay: var(--bob-delay, 0s); }
 .rocket-boost { position: relative; transition: transform .2s ease; }
