@@ -73,8 +73,8 @@ function rankHeight(team, teams, hiddenMode) {
   const uniquePositive = [...new Set(teams.filter(t => t.score > 0).map(t => t.score))].sort((a,b)=>b-a);
   const index = uniquePositive.indexOf(team.score);
   if (index < 0) return 8;
-  if (uniquePositive.length === 1) return 76;
-  const top = 76, low = 17;
+  if (uniquePositive.length === 1) return 65;
+  const top = 65, low = 17;
   return top - (index * (top-low) / Math.max(1, uniquePositive.length-1));
 }
 
