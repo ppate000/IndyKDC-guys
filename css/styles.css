@@ -44,8 +44,31 @@ button { cursor: pointer; }
 .team-label { position: absolute; top: 93%; left: 50%; transform: translateX(-50%); width: max-content; max-width: 170%; text-align: center; font-weight: 900; text-shadow: 0 2px 5px #000, 0 0 8px #000; z-index: 4; }
 .team-name { font-size: clamp(12px,1.25vw,20px); }
 .team-score { font-size: clamp(18px,2vw,30px); color: var(--accent); }
-.score-hidden { color: #fff; letter-spacing: .08em; }
-.timer {
+.score-hidden {
+    background: linear-gradient(
+        90deg,
+        #ff0000,
+        #ff8c00,
+        #ffff00,
+        #00ff00,
+        #00bfff,
+        #4b0082,
+        #ff00ff,
+        #ff0000
+    );
+
+    background-size: 300% 100%;
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+
+    animation: rainbowWave 2s linear infinite;
+
+    font-weight: 950;
+}.timer {
     position: absolute;
     z-index: 20;
 
@@ -124,6 +147,16 @@ body.fullscreen-active .management-control { display: none !important; }
   60%  { transform: translate(-3px,-2px) rotate(-.12deg) scale(1.01); }
   80%  { transform: translate(5px,4px) rotate(.12deg) scale(1.01); }
   100% { transform: translate(0,0) rotate(0deg) scale(1.01); }
+}
+
+@keyframes rainbowWave {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 300% 50%;
+    }
 }
 
 @keyframes hiddenCruise {
