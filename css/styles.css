@@ -65,8 +65,10 @@ button { cursor: pointer; }
     -webkit-text-fill-color: transparent;
     color: transparent;
 
-    animation: rainbowWave 2s linear infinite;
-
+    animation:
+        rainbowWave 2s linear infinite,
+        questionWave 0.8s ease-in-out infinite alternate;
+  
     font-weight: 950;
 }.timer {
     position: absolute;
@@ -156,6 +158,16 @@ body.fullscreen-active .management-control { display: none !important; }
 
     100% {
         background-position: 300% 50%;
+    }
+}
+
+@keyframes questionWave {
+    0% {
+        transform: translateY(-3px) scale(1);
+    }
+
+    100% {
+        transform: translateY(3px) scale(1.08);
     }
 }
 
