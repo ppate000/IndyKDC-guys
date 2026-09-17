@@ -45,16 +45,17 @@ button { cursor: pointer; }
 .team-name { font-size: clamp(12px,1.25vw,20px); }
 .team-score { font-size: clamp(18px,2vw,30px); color: var(--accent); }
 .score-hidden {
+    /* Bright rainbow */
     background: linear-gradient(
         90deg,
-        #ff0000,
-        #ff8c00,
-        #ffff00,
-        #00ff00,
-        #00bfff,
-        #4b0082,
-        #ff00ff,
-        #ff0000
+        #ff1744,
+        #ff9100,
+        #ffee00,
+        #39ff14,
+        #00e5ff,
+        #2979ff,
+        #d500f9,
+        #ff1744
     );
 
     background-size: 300% 100%;
@@ -62,14 +63,23 @@ button { cursor: pointer; }
     -webkit-background-clip: text;
     background-clip: text;
 
-    -webkit-text-fill-color: transparent;
-    color: transparent;
+    -webkit-text-fill-color: transparent !important;
+    color: transparent !important;
+
+    /* Remove the dark shadow from the normal score */
+    text-shadow: none !important;
+
+    /* Make ??? brighter/larger */
+    font-weight: 1000;
+    filter:
+        drop-shadow(0 0 3px white)
+        drop-shadow(0 0 7px #00e5ff)
+        drop-shadow(0 0 11px #ff00ff);
 
     animation:
-        rainbowWave 2s linear infinite,
+        rainbowWave 1.5s linear infinite,
         questionWave 0.8s ease-in-out infinite alternate;
-  
-    font-weight: 950;
+}
 }.timer {
     position: absolute;
     z-index: 20;
