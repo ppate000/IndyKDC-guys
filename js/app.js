@@ -94,7 +94,7 @@ function rocketMarkup(team, i) {
   return `<div class="rocket-position ${state.settings?.scores_hidden && !team.revealed ? 'hidden-cruise' : ''}" id="rocket-${team.id}" style="left:${lanePositions[i] ?? 50}%;--rest:${height}%;--bob-delay:${(-i*.31).toFixed(2)}s;--cruise-delay:${(-i*.67).toFixed(2)}s">
     <div class="rocket-bob"><div class="rocket-boost" id="boost-${team.id}">
       <img class="flame-image" src="./assets/flame.png" alt="" />
-      <img class="rocket-image" src="./assets/rocket.png" alt="${escapeHtml(team.name)} rocket" />
+      <img class="rocket-image" src="./assets/rocket${i + 1}.png" alt="${escapeHtml(team.name)} rocket" />
       <div class="team-label"><div class="team-name">${escapeHtml(team.name)}</div><div class="team-score ${visible?'':'score-hidden'}">${visible ? team.score : '???'}</div></div>
     </div></div>
   </div>`;
