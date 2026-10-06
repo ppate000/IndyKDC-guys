@@ -47,6 +47,7 @@ let initialLoadDone = false;
 let toastTimer = null;
 let surgeShrinkTimer = null;
 let displayedSurgeKey = null;
+let forceSurgeFullscreen = false;
 
 const lanePositions = [7.5, 24.5, 41.5, 58.5, 75.5, 92.5];
 
@@ -147,15 +148,16 @@ function renderSettings() {
   if (state.settings.point_surge_active && state.settings.active_surge_room_id) {
     const room = state.rooms.find(r => r.id === state.settings.active_surge_room_id);
     const label = (room?.name || `Room ${state.settings.active_surge_room_id}`).toUpperCase();
-    const surgeKey = `${state.settings.active_surge_room_id}-${state.settings.updated_at || ''}`;
+    const surgeKey = String(state.settings.active_surge_room_id);
     els.surgeRoomLabel.textContent = label;
     els.surgeCornerLeftRoom.textContent = label;
     els.surgeCornerRightRoom.textContent = label;
 
     // A new Point Surge starts full-screen. After 5 seconds it becomes
     // two compact persistent badges in the bottom corners.
-    if (displayedSurgeKey !== surgeKey) {
+    if (displayedSurgeKey !== surgeKey || forceSurgeFullscreen) {
       displayedSurgeKey = surgeKey;
+      forceSurgeFullscreen = false;
       clearTimeout(surgeShrinkTimer);
       els.surgeAnnouncement.classList.remove('hidden');
       els.surgeCornerLeft.classList.add('hidden');
@@ -348,7 +350,10 @@ els.revealTeamButtons.addEventListener('click',e=>{
   const b=e.target.closest('.reveal-one'); if(!b) return;
   rpc('admin_reveal_team',{p_team_id:Number(b.dataset.teamId)});
 });
-document.querySelector('#startSurge').addEventListener('click',()=>rpc('admin_start_point_surge',{p_room_id:Number(els.surgeRoomSelect.value)}));
+document.querySelector('#startSurge').addEventListener('click',()=>{
+  forceSurgeFullscreen = true;
+  rpc('admin_start_point_surge',{p_room_id:Number(els.surgeRoomSelect.value)});
+});
 document.querySelector('#clearSurge').addEventListener('click',()=>rpc('admin_clear_point_surge'));
 
 document.querySelector('#saveTeamNames').addEventListener('click', async ()=>{
