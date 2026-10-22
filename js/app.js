@@ -211,7 +211,18 @@ function renderAdminControls() {
 }
 
 function renderPointsControls() {
-  els.scoreControls.innerHTML = state.teams.map(t => `<div class="score-team-card"><div class="score-team-header"><strong>${escapeHtml(t.name)}</strong><span class="score-current">${t.score}</span></div><div class="score-buttons">${[-1,-5,1,5,10,15].map(d => `<button class="score-btn ${d<0?'minus':'plus'}" data-team-id="${t.id}" data-delta="${d}">${d>0?'+':''}${d}</button>`).join('')}</div></div>`).join('');
+  els.scoreControls.innerHTML = state.teams.map(t => `
+    <div class="score-team-card">
+      <div class="score-team-header"><strong>${escapeHtml(t.name)}</strong><span class="score-current">${t.score}</span></div>
+      <div class="score-buttons">
+        ${[1, 2, 3, 5].map(d => `<button class="score-btn plus" data-team-id="${t.id}" data-delta="${d}">+${d}</button>`).join('')}
+      </div>
+      <div class="custom-score-row">
+        <input class="custom-score-input" type="number" min="1" max="2147483647" step="1" inputmode="numeric" placeholder="Custom amount" aria-label="Custom points for ${escapeHtml(t.name)}" />
+        <button class="custom-score-btn plus" data-team-id="${t.id}" data-direction="1">Add</button>
+        <button class="custom-score-btn minus" data-team-id="${t.id}" data-direction="-1">Subtract</button>
+      </div>
+    </div>`).join('');
 }
 
 function renderAll(opts={}) {
@@ -369,11 +380,30 @@ document.querySelector('#saveRoomNames').addEventListener('click', async ()=>{
   }
 });
 
-els.scoreControls.addEventListener('click',async e=>{
-  const b=e.target.closest('.score-btn'); if(!b) return;
-  b.disabled=true;
-  await rpc('adjust_team_score',{p_team_id:Number(b.dataset.teamId),p_delta:Number(b.dataset.delta)},els.pointsStatus);
-  setTimeout(()=>b.disabled=false,350);
+els.scoreControls.addEventListener('click', async e => {
+  const b = e.target.closest('.score-btn, .custom-score-btn');
+  if (!b) return;
+  const card = b.closest('.score-team-card');
+  let delta;
+  if (b.classList.contains('custom-score-btn')) {
+    const input = card.querySelector('.custom-score-input');
+    const amount = Number(input.value);
+    if (!Number.isSafeInteger(amount) || amount < 1 || amount > 2147483647) {
+      els.pointsStatus.textContent = 'Enter a whole number from 1 to 2,147,483,647.';
+      input.focus();
+      return;
+    }
+    delta = amount * Number(b.dataset.direction);
+  } else {
+    delta = Number(b.dataset.delta);
+  }
+  card.querySelectorAll('button').forEach(button => button.disabled = true);
+  try {
+    const ok = await rpc('adjust_team_score', {p_team_id: Number(b.dataset.teamId), p_delta: delta}, els.pointsStatus);
+    if (ok && b.classList.contains('custom-score-btn')) card.querySelector('.custom-score-input').value = '';
+  } finally {
+    card.querySelectorAll('button').forEach(button => button.disabled = false);
+  }
 });
 
 document.querySelector('#resetLeaderboard').addEventListener('click',()=>openModal(els.resetModal));
