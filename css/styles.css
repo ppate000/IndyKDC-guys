@@ -152,7 +152,7 @@ select option { color: #111; }
 .score-team-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
 .score-team-header strong { font-size: 20px; }
 .score-current { color: var(--accent); font-size: 24px; font-weight: 950; }
-.score-buttons { display: grid; grid-template-columns: repeat(6,1fr); gap: 7px; }
+.score-buttons { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 7px; }
 .score-btn.minus { background: #8a2e4c; }
 .score-btn.plus { background: #167b68; }
 .form-error { color: #ffb1b8; font-weight: 800; }
@@ -229,3 +229,12 @@ body.fullscreen-active .management-control { display: none !important; }
     top: 8px;
   }
 }
+
+/* Points Master custom score entry */
+.custom-score-row { display: grid; grid-template-columns: minmax(0,1fr) auto auto; gap: 8px; margin-top: 10px; }
+.custom-score-input { width: 100%; min-width: 0; padding: 10px 12px; border-radius: 11px; border: 1px solid rgba(255,255,255,.35); background: rgba(0,0,0,.4); color: #fff; font: inherit; }
+.custom-score-btn { border-radius: 11px; padding: 10px 14px; font-weight: 900; border: 1px solid rgba(255,255,255,.18); color: #fff; cursor: pointer; }
+.custom-score-btn.plus { background: #167b68; }
+.custom-score-btn.minus { background: #8a2e4c; }
+.custom-score-btn:disabled { opacity: .55; cursor: wait; }
+@media (max-width: 480px) { .custom-score-row { grid-template-columns: minmax(0,1fr) auto auto; gap: 5px; } .custom-score-btn { padding: 9px; } }
